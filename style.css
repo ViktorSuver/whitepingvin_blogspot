@@ -13,7 +13,7 @@ URL:      https://exs.whitepingvin.ru
 /* Content
 ----------------------------------------------- */
 body {
-  font: $(body.font);
+  font: normal normal 15px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
   color: $(body.text.color);
   background: $(body.background);
   padding: 0 $(content.shadow.spread) $(content.shadow.spread) $(content.shadow.spread);
