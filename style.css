@@ -7,7 +7,7 @@ URL:      https://exs.whitepingvin.ru
 ----------------------------------------------- */
 /* Variable definitions
    ====================
-*/
+
    <Variable name="keycolor" description="Main Color" type="color" default="#66bbdd" value="#ffffff"/>
 
    <Group description="Page Text" selector="body">
@@ -157,7 +157,7 @@ URL:      https://exs.whitepingvin.ru
 
    <Variable name="startSide" description="Side where text starts in blog language" type="automatic" default="left"/>
    <Variable name="endSide" description="Side where text ends in blog language" type="automatic" default="right"/>
-
+*/
 
 /* Content
 ----------------------------------------------- */
