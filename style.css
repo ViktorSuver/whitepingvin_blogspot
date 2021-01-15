@@ -237,13 +237,13 @@ $(content.background.color.selector) {
 }
 
 .Header h1 {
-  font: $(header.font);
-  color: $(header.text.color);
+  font: normal normal 60px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
+  color: #3399bb;
   text-shadow: $(header.shadow.offset.left) $(header.shadow.offset.top) $(header.shadow.spread) rgba(0, 0, 0, .2);
 }
 
 .Header h1 a {
-  color: $(header.text.color);
+  color: #3399bb;
 }
 
 .Header .description {
