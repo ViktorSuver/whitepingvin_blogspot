@@ -163,10 +163,10 @@ URL:      https://exs.whitepingvin.ru
 ----------------------------------------------- */
 body {
   font: normal normal 15px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
-  color: $(body.text.color);
-  background: $(body.background);
-  padding: 0 $(content.shadow.spread) $(content.shadow.spread) $(content.shadow.spread);
-  $(body.background.override)
+  color: #7d7d7d;
+  background: transparent;
+  padding: 0;
+  
 }
 
 html body $(page.width.selector) {
