@@ -237,7 +237,7 @@ $(content.background.color.selector) {
 }
 
 .Header h1 {
-  font: normal normal 60px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
+  font: normal normal 28px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
   color: #3399bb;
   text-shadow: $(header.shadow.offset.left) $(header.shadow.offset.top) $(header.shadow.spread) rgba(0, 0, 0, .2);
 }
