@@ -108,6 +108,9 @@ $(content.background.color.selector) {
 
 /* Tabs
 ----------------------------------------------- */
+ul, li {
+    list-style: none;
+}
 .tabs-inner .section:first-child {
   border-top: $(header.bottom.border.size) solid $(tabs.border.color);
 }
