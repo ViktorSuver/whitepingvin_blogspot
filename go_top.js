@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $('body').append('<a href="#" id="go-top" title="Вверх">Вверх</a>');
+  $('body').append('<a href="#" id="go-top" title="Вверх"><i class="fa fa-chevron-circle-up fa-3x" aria-hidden="true"></i></a>');
 });
 
 $(function() {
