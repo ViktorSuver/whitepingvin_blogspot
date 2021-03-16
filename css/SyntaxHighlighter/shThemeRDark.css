@@ -56,16 +56,16 @@
   color: #e0e8ff !important;
 }
 .syntaxhighlighter .plain, .syntaxhighlighter .plain a {
-  color: #b9bdb6 !important;
+  color: #c0d5dc !important;
 }
 .syntaxhighlighter .comments, .syntaxhighlighter .comments a {
   color: #878a85 !important;
 }
 .syntaxhighlighter .string, .syntaxhighlighter .string a {
-  color: #5ce638 !important;
+  color: #a2d881 !important;
 }
 .syntaxhighlighter .keyword {
-  color: #5ba1cf !important;
+  color: #d07f7f !important;
 }
 .syntaxhighlighter .preprocessor {
   color: #435a5f !important;
@@ -74,7 +74,7 @@
   color: #ffaa3e !important;
 }
 .syntaxhighlighter .value {
-  color: #009900 !important;
+  color: #9fc172 !important;
 }
 .syntaxhighlighter .functions {
   color: #ffaa3e !important;
@@ -88,7 +88,7 @@
   background-color: none !important;
 }
 .syntaxhighlighter .color1, .syntaxhighlighter .color1 a {
-  color: #e0e8ff !important;
+  color: #e8b57f !important;
 }
 .syntaxhighlighter .color2, .syntaxhighlighter .color2 a {
   color: white !important;
