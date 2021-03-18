@@ -123,164 +123,115 @@ var sh = {
 		scriptScriptTags			: { left: /(&lt;|<)\s*script.*?(&gt;|>)/gi, right: /(&lt;|<)\/\s*script\s*(&gt;|>)/gi }
 	},
 
-            toolbar: {
-                create: function(_2) {
-                    var _3 = document.createElement("DIV"),
-                        _4 = sh.toolbar.items;
-                    _3.className = "toolbar";
-                    for (var _5 in _4) {
-                        var _6 = _4[_5],
-                            _7 = new _6(_2),
-                            _8 = _7.create();
-                        _2.toolbarCommands[_5] = _7;
-                        if (_8 == null) {
-                            continue
-                        }
-                        if (typeof(_8) == "string") {
-                            _8 = sh.toolbar.createButton(_8, _2.id, _5)
-                        }
-                        _8.className += "item " + _5;
-                        _3.appendChild(_8)
-                    }
-                    return _3
-                },
-                createButton: function(_9, _a, _b) {
-                    var a = document.createElement("a"),
-                        _d = a.style,
-                        _e = sh.config,
-                        _f = _e.toolbarItemWidth,
-                        _10 = _e.toolbarItemHeight;
-                    a.href = "#" + _b;
-                    a.title = _9;
-                    a.highlighterId = _a;
-                    a.commandName = _b;
-                    a.innerHTML = _9;
-                    if (isNaN(_f) == false) {
-                        _d.width = _f + "px"
-                    }
-                    if (isNaN(_10) == false) {
-                        _d.height = _10 + "px"
-                    }
-                    a.onclick = function(e) {
-                        try {
-                            sh.toolbar.executeCommand(this, e || window.event, this.highlighterId, this.commandName)
-                        } catch (e) {
-                            sh.utils.alert(e.message)
-                        }
-                        return false
-                    };
-                    return a
-                },
-                executeCommand: function(_12, _13, _14, _15, _16) {
-                    var _17 = sh.vars.highlighters[_14],
-                        _18;
-                    if (_17 == null || (_18 = _17.toolbarCommands[_15]) == null) {
-                        return null
-                    }
-                    return _18.execute(_12, _13, _16)
-                },
-                items: {
-                    expandSource: function(_19) {
-                        this.create = function() {
-                            if (_19.getParam("collapse") != true) {
-                                return
-                            }
-                            return sh.config.strings.expandSource
-                        };
-                        this.execute = function(_1a, _1b, _1c) {
-                            var div = _19.div;
-                            _1a.parentNode.removeChild(_1a);
-                            div.className = div.className.replace("collapsed", "")
-                        }
-                    },
-                    viewSource: function(_1e) {
-                        this.create = function() {
-                            return sh.config.strings.viewSource
-                        };
-                        this.execute = function(_1f, _20, _21) {
-                            var _22 = sh.utils.fixInputString(_1e.originalCode).replace(/</g, "&lt;"),
-                                wnd = sh.utils.popup("", "_blank", 750, 400, "location=0, resizable=1, menubar=0, scrollbars=1");
-                            _22 = sh.utils.unindent(_22);
-                            wnd.document.write("<pre>" + _22 + "</pre>");
-                            wnd.document.close()
-                        }
-                    },
-                    copyToClipboard: function(_24) {
-                        var _25, _26, _27 = _24.id;
-                        this.create = function() {
-                            var _28 = sh.config;
-                            if (_28.clipboardSwf == null) {
-                                return null
-                            }
+	toolbar: {
+		/**
+		 * Generates HTML markup for the toolbar.
+		 * @param {Highlighter} highlighter Highlighter instance.
+		 * @return {String} Returns HTML markup.
+		 */
+		getHtml: function(highlighter)
+		{
+			var html = '<div class="toolbar">',
+				items = sh.toolbar.items,
+				list = items.list
+				;
+			
+			function defaultGetHtml(highlighter, name)
+			{
+				return sh.toolbar.getButtonHtml(highlighter, name, sh.config.strings[name]);
+			};
+			
+			for (var i = 0; i < list.length; i++)
+				html += (items[list[i]].getHtml || defaultGetHtml)(highlighter, list[i]);
+			
+			html += '</div>';
+			
+			return html;
+		},
+		
+		/**
+		 * Generates HTML markup for a regular button in the toolbar.
+		 * @param {Highlighter} highlighter Highlighter instance.
+		 * @param {String} commandName		Command name that would be executed.
+		 * @param {String} label			Label text to display.
+		 * @return {String}					Returns HTML markup.
+		 */
+		getButtonHtml: function(highlighter, commandName, label)
+		{
+			return '<span><a href="#" class="toolbar_item'
+				+ ' command_' + commandName
+				+ ' ' + commandName
+				+ '">' + label + '</a></span>'
+				;
+		},
+		
+		/**
+		 * Event handler for a toolbar anchor.
+		 */
+		handler: function(e)
+		{
+			var target = e.target,
+				className = target.className || ''
+				;
 
-                            function params(_29) {
-                                var _2a = "";
-                                for (var _2b in _29) {
-                                    _2a += "<param name='" + _2b + "' value='" + _29[_2b] + "'/>"
-                                }
-                                return _2a
-                            };
+			function getValue(name)
+			{
+				var r = new RegExp(name + '_(\\w+)'),
+					match = r.exec(className)
+					;
 
-                            function attributes(_2c) {
-                                var _2d = "";
-                                for (var _2e in _2c) {
-                                    _2d += " " + _2e + "='" + _2c[_2e] + "'"
-                                }
-                                return _2d
-                            };
-                            var _2f = {
-                                    width: _28.toolbarItemWidth,
-                                    height: _28.toolbarItemHeight,
-                                    id: _27 + "_clipboard",
-                                    type: "application/x-shockwave-flash",
-                                    title: sh.config.strings.copyToClipboard
-                                },
-                                _30 = {
-                                    allowScriptAccess: "always",
-                                    wmode: "transparent",
-                                    flashVars: "highlighterId=" + _27,
-                                    menu: "false"
-                                },
-                                swf = _28.clipboardSwf,
-                                _32;
-                            if (/msie/i.test(navigator.userAgent)) {
-                                _32 = "<object" + attributes({
-                                    classid: "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000",
-                                    codebase: "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"
-                                }) + attributes(_2f) + ">" + params(_30) + params({
-                                    movie: swf
-                                }) + "</object>"
-                            } else {
-                                _32 = "<embed" + attributes(_2f) + attributes(_30) + attributes({
-                                    src: swf
-                                }) + "/>"
-                            }
-                            _25 = document.createElement("div");
-                            _25.innerHTML = _32;
-                            return _25
-                        };
-                        this.execute = function(_33, _34, _35) {
-                            var _36 = _35.command;
-                            switch (_36) {
-                                case "get":
-                                    var _37 = sh.utils.unindent(sh.utils.fixInputString(_24.originalCode).replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&"));
-                                    if (window.clipboardData) {
-                                        window.clipboardData.setData("text", _37)
-                                    } else {
-                                        return sh.utils.unindent(_37)
-                                    }
-                                    case "ok":
-                                        sh.utils.alert(sh.config.strings.copyToClipboardConfirmation);
-                                        break;
-                                    case "error":
-                                        sh.utils.alert(_35.message);
-                                        break
-                            }
-                        }
-                    },
+				return match ? match[1] : null;
+			};
+			
+			var highlighter = getHighlighterById(findParentElement(target, '.syntaxhighlighter').id),
+				commandName = getValue('command')
+				;
+			
+			// execute the toolbar command
+			if (highlighter && commandName)
+				sh.toolbar.items[commandName].execute(highlighter);
 
-                }
-            },
+			// disable default A click behaviour
+			e.preventDefault();
+		},
+		
+		/** Collection of toolbar items. */
+		items : {
+			// Ordered lis of items in the toolbar. Can't expect `for (var n in items)` to be consistent.
+			list: ['expandSource', 'help'],
+
+			expandSource: {
+				getHtml: function(highlighter)
+				{
+					if (highlighter.getParam('collapse') != true)
+						return '';
+						
+					var title = highlighter.getParam('title');
+					return sh.toolbar.getButtonHtml(highlighter, 'expandSource', title ? title : sh.config.strings.expandSource);
+				},
+			
+				execute: function(highlighter)
+				{
+					var div = getHighlighterDivById(highlighter.id);
+					removeClass(div, 'collapsed');
+				}
+			},
+
+			/** Command to display the about dialog window. */
+			help: {
+				execute: function(highlighter)
+				{	
+					var wnd = popup('', '_blank', 500, 250, 'scrollbars=0'),
+						doc = wnd.document
+						;
+					
+					doc.write(sh.config.strings.aboutDialog);
+					doc.close();
+					wnd.focus();
+				}
+			}
+		}
+	},
 
 	/**
 	 * Finds all elements on the page which should be processes by SyntaxHighlighter.
