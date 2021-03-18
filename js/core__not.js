@@ -196,28 +196,20 @@ var sh = {
 		},
 		
 		/** Collection of toolbar items. */
-		items : {
-			// Ordered lis of items in the toolbar. Can't expect `for (var n in items)` to be consistent.
-			list: ['expandSource', 'help'],
-
-			expandSource: {
-				getHtml: function(highlighter)
-				{
-					if (highlighter.getParam('collapse') != true)
-						return '';
-						
-					var title = highlighter.getParam('title');
-					return sh.toolbar.getButtonHtml(highlighter, 'expandSource', title ? title : sh.config.strings.expandSource);
-				},
-			
-				execute: function(highlighter)
-				{
-					var div = getHighlighterDivById(highlighter.id);
-					removeClass(div, 'collapsed');
-				}
-			},
-
-			/** Command to display the about dialog window. */
+		                items: {
+                    expandSource: function(_19) {
+                        this.create = function() {
+                            if (_19.getParam("collapse") != true) {
+                                return
+                            }
+                            return sh.config.strings.expandSource
+                        };
+                        this.execute = function(_1a, _1b, _1c) {
+                            var div = _19.div;
+                            _1a.parentNode.removeChild(_1a);
+                            div.className = div.className.replace("collapsed", "")
+                        }
+                    },
                     viewSource: function(_1e) {
                         this.create = function() {
                             return sh.config.strings.viewSource
@@ -302,8 +294,50 @@ var sh = {
                                         break
                             }
                         }
+                    },
+                    printSource: function(_38) {
+                        this.create = function() {
+                            return sh.config.strings.print
+                        };
+                        this.execute = function(_39, _3a, _3b) {
+                            var _3c = document.createElement("IFRAME"),
+                                doc = null;
+                            if (sh.vars.printFrame != null) {
+                                document.body.removeChild(sh.vars.printFrame)
+                            }
+                            sh.vars.printFrame = _3c;
+                            _3c.style.cssText = "position:absolute;width:0px;height:0px;left:-500px;top:-500px;";
+                            document.body.appendChild(_3c);
+                            doc = _3c.contentWindow.document;
+                            copyStyles(doc, window.document);
+                            doc.write("<div class=\"" + _38.div.className.replace("collapsed", "") + " printing\">" + _38.div.innerHTML + "</div>");
+                            doc.close();
+                            _3c.contentWindow.focus();
+                            _3c.contentWindow.print();
+
+                            function copyStyles(_3e, _3f) {
+                                var _40 = _3f.getElementsByTagName("link");
+                                for (var i = 0; i < _40.length; i++) {
+                                    if (_40[i].rel.toLowerCase() == "stylesheet" && /shCore\.css$/.test(_40[i].href)) {
+                                        _3e.write("<link type=\"text/css\" rel=\"stylesheet\" href=\"" + _40[i].href + "\"></link>")
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    about: function(_42) {
+                        this.create = function() {
+                            return sh.config.strings.help
+                        };
+                        this.execute = function(_43, _44) {
+                            var wnd = sh.utils.popup("", "_blank", 500, 250, "scrollbars=0"),
+                                doc = wnd.document;
+                            doc.write(sh.config.strings.aboutDialog);
+                            doc.close();
+                            wnd.focus()
+                        }
                     }
-		}
+                }
 	},
 
 	/**
