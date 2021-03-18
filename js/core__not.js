@@ -218,18 +218,91 @@ var sh = {
 			},
 
 			/** Command to display the about dialog window. */
-			help: {
-				execute: function(highlighter)
-				{	
-					var wnd = popup('', '_blank', 500, 250, 'scrollbars=0'),
-						doc = wnd.document
-						;
-					
-					doc.write(sh.config.strings.aboutDialog);
-					doc.close();
-					wnd.focus();
-				}
-			}
+                    viewSource: function(_1e) {
+                        this.create = function() {
+                            return sh.config.strings.viewSource
+                        };
+                        this.execute = function(_1f, _20, _21) {
+                            var _22 = sh.utils.fixInputString(_1e.originalCode).replace(/</g, "&lt;"),
+                                wnd = sh.utils.popup("", "_blank", 750, 400, "location=0, resizable=1, menubar=0, scrollbars=1");
+                            _22 = sh.utils.unindent(_22);
+                            wnd.document.write("<pre>" + _22 + "</pre>");
+                            wnd.document.close()
+                        }
+                    },
+                    copyToClipboard: function(_24) {
+                        var _25, _26, _27 = _24.id;
+                        this.create = function() {
+                            var _28 = sh.config;
+                            if (_28.clipboardSwf == null) {
+                                return null
+                            }
+
+                            function params(_29) {
+                                var _2a = "";
+                                for (var _2b in _29) {
+                                    _2a += "<param name='" + _2b + "' value='" + _29[_2b] + "'/>"
+                                }
+                                return _2a
+                            };
+
+                            function attributes(_2c) {
+                                var _2d = "";
+                                for (var _2e in _2c) {
+                                    _2d += " " + _2e + "='" + _2c[_2e] + "'"
+                                }
+                                return _2d
+                            };
+                            var _2f = {
+                                    width: _28.toolbarItemWidth,
+                                    height: _28.toolbarItemHeight,
+                                    id: _27 + "_clipboard",
+                                    type: "application/x-shockwave-flash",
+                                    title: sh.config.strings.copyToClipboard
+                                },
+                                _30 = {
+                                    allowScriptAccess: "always",
+                                    wmode: "transparent",
+                                    flashVars: "highlighterId=" + _27,
+                                    menu: "false"
+                                },
+                                swf = _28.clipboardSwf,
+                                _32;
+                            if (/msie/i.test(navigator.userAgent)) {
+                                _32 = "<object" + attributes({
+                                    classid: "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000",
+                                    codebase: "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0"
+                                }) + attributes(_2f) + ">" + params(_30) + params({
+                                    movie: swf
+                                }) + "</object>"
+                            } else {
+                                _32 = "<embed" + attributes(_2f) + attributes(_30) + attributes({
+                                    src: swf
+                                }) + "/>"
+                            }
+                            _25 = document.createElement("div");
+                            _25.innerHTML = _32;
+                            return _25
+                        };
+                        this.execute = function(_33, _34, _35) {
+                            var _36 = _35.command;
+                            switch (_36) {
+                                case "get":
+                                    var _37 = sh.utils.unindent(sh.utils.fixInputString(_24.originalCode).replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&"));
+                                    if (window.clipboardData) {
+                                        window.clipboardData.setData("text", _37)
+                                    } else {
+                                        return sh.utils.unindent(_37)
+                                    }
+                                    case "ok":
+                                        sh.utils.alert(sh.config.strings.copyToClipboardConfirmation);
+                                        break;
+                                    case "error":
+                                        sh.utils.alert(_35.message);
+                                        break
+                            }
+                        }
+                    }
 		}
 	},
 
