@@ -10,6 +10,8 @@ URL:      https://suver.ru
 ----------------------------------------------- */
 body {
   background: linear-gradient(169deg, #578ea357, #ffc0cb5e);
-  
+  height: 100vh;  
+  font: normal normal 15px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
+  color: #dbdbdb;
   
 }
